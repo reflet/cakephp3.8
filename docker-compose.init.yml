@@ -1,0 +1,17 @@
+#
+# Dockerイメージを作成する
+# ex) $ docker-compose -f docker-compose.init.yml build --no-cache
+#
+# 新規プロジェクトを作成する
+# ex) $ docker-compose -f docker-compose.init.yml run --rm composer create-project --prefer-dist cakephp/app:3.8.* .
+#
+version: '3'
+services:
+  composer:
+    image: my/composer
+    build:
+      context: ./docker/composer/
+      dockerfile: Dockerfile
+    container_name: 'composer'
+    volumes:
+      - ./src:/app
