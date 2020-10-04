@@ -2,8 +2,9 @@
 CakePHP3.8環境構築です。
 
 ## 前提条件
-* dockerをインストールしていること
-* docker-composeをインストールしていること
+* macOS環境
+* [docker](https://docs.docker.com/get-docker/) をインストールしていること
+* [docker-compose](https://docs.docker.com/compose/install/) をインストールしていること
 
 ## システム要件
 * Apache 2.4.38
@@ -17,14 +18,35 @@ CakePHP3.8環境構築です。
 
 ```
 $ mkdir -p ~/workspace/cakephp3.8 && cd ~/workspace/cakephp3.8
-$ git clone git@github.com:reflet/cakephp3.8.git .
+$ git clone https://github.com/reflet/cakephp3.8.git .
 ```
 
-## ローカル環境を起動する
+## Dockerイメージ作成 & 起動する
+下記コマンドにて、dockerイメージを作成して、コンテナを起動します。
 
 ```
 $ docker-compose build --no-cache
 $ docker-compose up -d
+```
+
+## ローカル環境の停止・起動
+下記コマンドにて、dockerコンテナの停止・起動を行えます。
+
+```
+# 稼働中のコンテナを停止する
+$ docker-compose stop
+```
+
+```
+# 停止中のコンテナを起動する
+$ docker-compose start
+```
+
+## ローカル環境の破棄
+下記コマンドにてDBデータも含めて削除されます。
+
+```
+$ docker-compose down -v
 ```
 
 ## composer update
