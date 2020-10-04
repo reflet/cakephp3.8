@@ -1,0 +1,88 @@
+#
+# Dockerイメージを作成する
+# ex) $ docker-compose build --no-cache
+#
+# ローカル環境を起動する
+# ex) $ docker-compose up -d
+#
+# ローカル環境を停止する
+# ex) $ docker-compose stop
+#
+# ローカル環境を再起動する
+# ex) $ docker-compose start
+#
+# ローカル環境を破棄する (MySQLデータも含む)
+# ex) $ docker-compose down -v
+#
+# Composer Update
+# ex) $ docker-compose run --rm composer update
+#
+version: '3'
+services:
+  httpd:
+    image: my/apache2.4.38
+    build: ./docker/httpd/
+    container_name: 'httpd'
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - app:/var/www/www.example.com:cached
+
+  php:
+    image: my/php7.3
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    container_name: 'php'
+    tty: true
+    ports:
+      - '9000:9000'
+    volumes:
+      - app:/var/www/www.example.com:cached
+      - vendor:/var/www/www.example.com/vendor/
+    depends_on:
+      - mysql
+
+  composer:
+    image: my/composer
+    build:
+      context: ./docker/composer/
+      dockerfile: Dockerfile
+    container_name: 'composer'
+    working_dir: /var/www/www.example.com/
+    volumes:
+      - app:/var/www/www.example.com:cached
+      - vendor:/var/www/www.example.com/vendor/
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: 'mailhog'
+    ports:
+      - "8025:8025"
+
+  mysql:
+    build: ./docker/mysql/
+    image: my/mysql5.6
+    container_name: 'mysql'
+    environment:
+      - MYSQL_DATABASE=mysql
+      - MYSQL_ROOT_PASSWORD=development
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/example.sql:/docker-entrypoint-initdb.d/example.sql
+
+volumes:
+  app:
+    driver_opts:
+      type: none
+      device: ${PWD}/src/
+      o: bind
+
+  vendor:
+    driver: local
+
+  mysql-data:
+    driver: local
