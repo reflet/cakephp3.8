@@ -91,10 +91,20 @@ $ docker cp php:/var/www/www.example.com/vendor ./src/
 CakePHPのプロジェクトを新規に作成り直す場合は、下記のように実行します。
 
 ```
+# Dockerコンテナ破棄
+$ docker-compose down -v
+
+# コードの初期化
 $ rm -rf src && mkdir src
 $ docker-compose -f docker-compose.init.yml build --no-cache
 $ docker-compose -f docker-compose.init.yml run --rm composer create-project --prefer-dist cakephp/app:3.8.* .
 Set Folder Permissions ? (Default to Y) [Y,n]? Y
+
+# Dockerイメージ再構築
+$ docker-compose build --no-cache
+
+# Dockerコンテナ起動
+$ docker-compose up -d
 ```
 
 以上
