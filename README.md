@@ -21,6 +21,17 @@ $ mkdir -p ~/workspace/cakephp3.8 && cd ~/workspace/cakephp3.8
 $ git clone https://github.com/reflet/cakephp3.8.git .
 ```
 
+## CakePHP環境設定
+下記コマンドにてCakePHPの設定ファイルを準備する。
+
+```
+$ cp ./src/config/.env.default ./src/config/.env
+$ cp ./src/config/app.default.php ./src/config/app.php
+$ sed -i '' 's/__SALT__/{長いランダムな文字列}/' ./src/config/app.php
+```
+※ セキュリティ用の salt は、ハッシュの生成に用いられます。  
+※ この値は、ランダムで長い文字列にします。そうすることで推測がより困難になります。
+
 ## Dockerイメージ作成 & 起動する
 下記コマンドにて、dockerイメージを作成して、コンテナを起動します。
 
